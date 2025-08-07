@@ -25,8 +25,13 @@ def get(request):#读密码来的
                 return_str = i[:-5]
                 with open(f"{path}/{i}", "r") as f:
                     file_out = json.load(f)
-                file_out.append(return_str)
-                yield json.dumps(file_out) + "\n"
+                try:
+                    file_out[0]
+                    file_out.append(return_str)
+                    yield json.dumps(file_out) + "\n"
+                except IndexError:
+                    os.remove(f"{path}/{i}")
+
         else:
             yield "null"
     return yule(), {'Content-Type': 'application/x-ndjson'}
@@ -89,7 +94,6 @@ def delete(request):
     data = request.json
     file = data["file"]
     pwd_num = data["pwd_num"]
-    print(file)
     with open(f"{path}/{file}.json","r") as f:
         json_data = json.load(f)
     del json_data[int(pwd_num)]

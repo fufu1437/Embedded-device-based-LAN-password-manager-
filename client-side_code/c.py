@@ -133,11 +133,12 @@ def Get(*,color=False):
     except TypeError:
         print("无密码，请添加密码")
 
-def GetModify_indices(para):
+def GetModify_indices(para,web):
     while True:
         try:
             web_num = input(f"请输入{para}的网页的序号")
-            if int(web_num) <= int(len(web[1])):
+            print(int(len(web[1])))
+            if int(web_num)-1 <= int(len(web[1])):
                 break
             else:
                 print("请输入正确的序号")
@@ -147,7 +148,7 @@ def GetModify_indices(para):
     while True:
         try:
             num = input(f"请输入{para}的密码组的序号")
-            axz = web[0][int(num)]
+            axz = web[0][int(num)-1]
         except (IndexError, ValueError):
             print("请输入正确的序号")
         else:
@@ -188,7 +189,7 @@ while True:
                 num += 1
                 print(f"{RED}({num}) {RESET}{base64_to_chinese(f[:-5])}")
             while True:
-                input3 = input("请君择欲查之序以为入(T/退出)：").strip()
+                input3 = input("请输入你想查询的网站(应用)的序号(T/退出)：").strip()
                 if input3 == "":
                     print("请输入正确的序号")
                 elif input3.upper() == "T":
@@ -238,7 +239,6 @@ while True:
             dict1["note"] = chinese_to_base64(user_note)
             site.append(chinese_to_base64(user_site))
             site.append(dict1)
-            print(site)
             try:
                 requests.post(f"{url}/post", json=site)
             except requests.exceptions.ConnectionError:
@@ -251,7 +251,7 @@ while True:
                 raise ConnectionFailed
             web = Get(color=True)
             ac = {}
-            get_modify = GetModify_indices("修改")
+            get_modify = GetModify_indices("修改",web)
             web_num = get_modify[0]
             num = get_modify[1]
 
@@ -270,13 +270,11 @@ while True:
                 raise ConnectionFailed
             acs = {}
             web = Get(color=True)
-            get_modify = GetModify_indices("删除")
+            get_modify = GetModify_indices("删除",web)
             web_num = get_modify[0]
             num = get_modify[1]
             file_num = web[1][int(web_num)-1]
             acs.update({"file":file_num,"pwd_num":int(num)-1})
-            print(int(num)-1)
-            print(acs)
             input2 = input("确定删除(y/n): ")
             if input2=="y":
                 requests.delete(f"{url}/del", json=acs)
