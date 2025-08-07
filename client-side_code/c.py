@@ -275,7 +275,7 @@ while True:
             num = get_modify[1]
             file_num = web[1][int(web_num)-1]
             acs.update({"file":file_num,"pwd_num":int(num)-1})
-            input2 = input("确定删除(y/n): ")
+            input2 = input("请确认(y/n): ")
             if input2=="y":
                 requests.delete(f"{url}/del", json=acs)
             elif input2=="n":
