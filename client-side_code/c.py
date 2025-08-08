@@ -3,7 +3,7 @@ import requests
 import json
 # import socket
 import ctypes
-
+#项目发布在：https://github.com/fufu1437/Embedded-device-based-LAN-password-manager-
 # 定义RGB值
 r = 30
 g = 31
