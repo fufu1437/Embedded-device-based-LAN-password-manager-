@@ -188,7 +188,7 @@ while True:
                 num += 1
                 print(f"{RED}({num}) {RESET}{base64_to_chinese(f[:-5])}")
             while True:
-                input3 = input("请输入你想查询的网站(应用)的序号(T/退出)：").strip()
+                input3 = input("请输入你想查询的网站/应用的序号(T/退出)：").strip()
                 if input3 == "":
                     print("请输入正确的序号")
                 elif input3.upper() == "T":
