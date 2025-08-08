@@ -162,21 +162,23 @@ class ExitProgram(Exception):
     pass
 
 while True:
+    try:
     list1 = []
     dict1 = {}
     dict2 = {}
     site = []
     web_num = 0
     num = 0
+        if not check_port(device_ip):
+            raise ConnectionFailed
     print(f"{AquaFg}(1)查看全部密码\n"
           "(2)查看部分密码\n"
           "(3)添加密码\n"
           "(4)修改密码\n"
           f"(5)删除密码{RESET}")
 
-    try:
-        if not check_port(device_ip):
-            raise ConnectionFailed
+
+
         input1 = input()
         if input1 == '1':#读取密码
            Get()
