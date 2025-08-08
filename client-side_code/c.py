@@ -1,7 +1,7 @@
 import base64
 import requests
 import json
-import socket
+# import socket
 import ctypes
 
 # 定义RGB值
