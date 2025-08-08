@@ -3,7 +3,7 @@ from machine import Pin,SPI
 import ujson as json
 import os
 import sdcard
-
+#项目发布在：https://github.com/fufu1437/Embedded-device-based-LAN-password-manager-
 def sd():#连接sd卡来的
     spi = SPI(1, sck=Pin(18), mosi=Pin(23), miso=Pin(19))
     cs = Pin(5, Pin.OUT)
