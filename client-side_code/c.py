@@ -162,22 +162,20 @@ class ExitProgram(Exception):
     pass
 
 while True:
+    list1 = []
+    dict1 = {}
+    dict2 = {}
+    site = []
+    web_num = 0
+    num = 0
+    print(f"{AquaFg}(1)查看全部密码\n"
+          "(2)查看部分密码\n"
+          "(3)添加密码\n"
+          "(4)修改密码\n"
+          f"(5)删除密码{RESET}")
     try:
-        list1 = []
-        dict1 = {}
-        dict2 = {}
-        site = []
-        web_num = 0
-        num = 0
-        print(f"{AquaFg}(1)查看全部密码\n"
-              "(2)查看部分密码\n"
-              "(3)添加密码\n"
-              "(4)修改密码\n"
-              f"(5)删除密码{RESET}")
 
-
-
-        input1 = input()
+        input1 = input().strip()
         if input1 == '1':#读取密码
            Get()
 
@@ -245,7 +243,6 @@ while True:
             dict1["note"] = chinese_to_base64(user_note)
             site.append(chinese_to_base64(user_site))
             site.append(dict1)
-            print(site)
             try:
                 requests.post(f"{url}/post", json=site)
             except requests.exceptions.ConnectionError:
@@ -287,6 +284,6 @@ while True:
 
     except AbortProcessing:
         print("已停止")
-    
+
     # except ConnectionFailed:
     #     print("远程设备未启动")
