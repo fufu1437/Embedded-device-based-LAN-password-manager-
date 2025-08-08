@@ -285,8 +285,8 @@ while True:
     except requests.exceptions.ConnectionError:
         print("连接失败")
 
-    # except AbortProcessing:
-    #     print("已停止")
-    #
+    except AbortProcessing:
+        print("已停止")
+    
     # except ConnectionFailed:
     #     print("远程设备未启动")
