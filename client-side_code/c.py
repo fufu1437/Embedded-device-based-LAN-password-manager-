@@ -101,7 +101,7 @@ def Get(*,color=False):
     num1=0
 
     try:
-        json1 = requests.get(f'{url}/get', stream=True)
+        json1 = requests.get(f'{url}/get', stream=True,timeout=3)
         for line in json1.iter_lines():
             num = 0
             data = json.loads(line.decode('utf-8'))
@@ -174,13 +174,12 @@ while True:
           "(4)修改密码\n"
           f"(5)删除密码{RESET}")
     try:
-
         input1 = input().strip()
+        requests.get(f"{url}/test", timeout=3)
         if input1 == '1':#读取密码
            Get()
-
         elif input1 == "2":
-            data2 = requests.get(f'{url}/GetFile').json()
+            data2 = requests.get(f'{url}/GetFile',timeout=3).json()
             print(f"{BLUE}网站/应用：{RESET}")
             for f in data2:
                 num += 1
@@ -201,7 +200,7 @@ while True:
 
         elif input1 == '3':#写入密码
             while True:
-                data4 = requests.get(f'{url}/GetFile').json()
+                data4 = requests.get(f'{url}/GetFile',timeout=3).json()
                 print(f"{BLUE}网站/应用：{RESET}")
                 for f in data4:
                     num += 1
@@ -283,7 +282,4 @@ while True:
         print("连接失败")
 
     except AbortProcessing:
-        print("已停止")
-
-    # except ConnectionFailed:
-    #     print("远程设备未启动")
+        print("已退出")

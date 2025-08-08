@@ -15,6 +15,10 @@ app = Microdot()
 list1=[]
 path = "/sd/data"
 
+@app.route("/test" ,methods=['GET'])
+def test(request):
+    return 404
+
 @app.route("/get" ,methods=['GET'])
 def get(request):#读密码来的
     def yule():
