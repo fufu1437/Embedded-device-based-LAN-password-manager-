@@ -21,16 +21,16 @@ LightGrayFg = "\033[38;2;188;190;196m"
 DimmedRed = "\033[38;2;230;0;0m"
 AquaFg = "\033[38;2;125;182;191m"
 
-def check_port(ip, port=80, timeout=1):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(timeout)
-    try:
-        s.connect((ip, port))
-        return True  # 端口开放表示设备可达
-    except OSError:
-        return False  # 连接失败
-    finally:
-        s.close()
+# def check_port(ip, port=80, timeout=1):
+#     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#     s.settimeout(timeout)
+#     try:
+#         s.connect((ip, port))
+#         return True  # 端口开放表示设备可达
+#     except OSError:
+#         return False  # 连接失败
+#     finally:
+#         s.close()
 
 # 设置整个终端背景色 (仅限Windows)
 def set_terminal_bg_color(r, g, b):
@@ -163,8 +163,6 @@ class ExitProgram(Exception):
 
 while True:
     try:
-        if not check_port(device_ip):
-            raise ConnectionFailed
         list1 = []
         dict1 = {}
         dict2 = {}
@@ -287,8 +285,8 @@ while True:
     except requests.exceptions.ConnectionError:
         print("连接失败")
 
-    except AbortProcessing:
-        print("已停止")
-
-    except ConnectionFailed:
-        print("远程设备未启动")
+    # except AbortProcessing:
+    #     print("已停止")
+    #
+    # except ConnectionFailed:
+    #     print("远程设备未启动")
