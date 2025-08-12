@@ -3,7 +3,7 @@ import requests
 import json
 # import socket
 import ctypes
-#项目发布在：https://github.com/fufu1437/Embedded-device-based-LAN-password-manager-
+
 # 定义RGB值
 r = 30
 g = 31
@@ -256,9 +256,9 @@ while True:
 
             ac["file"] = f"{web[1][int(web_num) - 1]}"
             ac["nums"] = f"{int(num) - 1}"
-            name = input("用户名/账户(不修改则直接回车(Enter))：").strip()
-            password = input("密码(不修改则直接回车(Enter))：").strip()
-            note = input("备注(不修改则直接回车(Enter))：").strip()
+            name = chinese_to_base64(input("用户名/账户(不修改则直接回车(Enter))：").strip())
+            password = chinese_to_base64(input("密码(不修改则直接回车(Enter))：").strip())
+            note = chinese_to_base64(input("备注(不修改则直接回车(Enter))：").strip())
             ac.update({"name": name, "pwds": password, "note": note})
             a = requests.patch(f"{url}/patch", json=ac)
 
