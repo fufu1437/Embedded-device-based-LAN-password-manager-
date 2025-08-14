@@ -184,6 +184,8 @@ while True:
                 exit()
         requests.get(f"{url}/test", timeout=3)
         match input1.upper():
+            case "":
+                print("请输入正确的指令")
             case "1":#读取密码
                 Get()
 
@@ -294,8 +296,7 @@ while True:
                 elif input2=="n":
                     print("已成功删除")
 
-            case _:
-                print("请输入正确的指令")
+
     except requests.exceptions.ConnectionError:
         print("连接失败")
 
