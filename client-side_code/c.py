@@ -178,7 +178,7 @@ while True:
           "(4)修改密码\n"
           f"(5)删除密码{RESET}")
     try:
-        input1 = input("请输入你要执行的操作的序号(T/退出)：").strip()
+        input1 = input("请输入你要执行的操作的序号(T/退出程序)：").strip()
         requests.get(f"{url}/test", timeout=3)
         match input1.upper():
             case "1":#读取密码
