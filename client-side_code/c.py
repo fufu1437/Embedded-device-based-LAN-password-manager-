@@ -132,8 +132,10 @@ def Get(*,color=False):
 def GetModify_indices(para,web):
     while True:
         try:
-            web_num = input(f"请输入{para}的网页的序号")
-            if int(web_num)-1 <= int(len(web[1])):
+            web_num = input(f"请输入{para}的网页的序号(T/退出)：").strip()
+            if web_num.upper()=="T":
+                raise AbortProcessing
+            elif int(web_num)-1 <= int(len(web[1])):
                 break
             else:
                 print("请输入正确的序号")
@@ -142,9 +144,11 @@ def GetModify_indices(para,web):
 
     while True:
         try:
-            num = int(input(f"请输入{para}的密码组的序号"))
+            num = input(f"请输入{para}的密码组的序号(T/退出)：").strip()
             axz = int(web[0][int(web_num)-1])
-            if num<=axz:
+            if num.upper() == "T":
+                raise AbortProcessing
+            elif int(num)<=axz:
                 break
             else:
                 raise IndexError
@@ -174,112 +178,127 @@ while True:
           "(4)修改密码\n"
           f"(5)删除密码{RESET}")
     try:
-        input1 = input().strip()
+        input1 = input("请输入你要执行的操作的序号(T/退出)：").strip()
         requests.get(f"{url}/test", timeout=3)
-        if input1 == '1':#读取密码
-           Get()
-        elif input1 == "2":
-            data2 = requests.get(f'{url}/GetFile',timeout=3).json()
-            print(f"{BLUE}网站/应用：{RESET}")
-            for f in data2:
-                num += 1
-                print(f"{RED}({num}) {RESET}{base64_to_chinese(f[:-5])}")
-            while True:
-                input3 = input("请输入你想查询的网站/应用的序号(T/退出)：").strip()
-                if input3 == "":
-                    print("请输入正确的序号")
-                elif input3.upper() == "T":
-                    raise AbortProcessing
-                else:
-                    break
-            data3 = requests.get(f'{url}/PartGet/{data2[int(input3)-1]}')
-            for z in data3.json():
-                print(f"用户名/账户：{base64_to_chinese(z["name"])}", end='  ')
-                print(f"密码：{base64_to_chinese(z["pwds"])}", end='  ')
-                print(f"备注：{base64_to_chinese(z["note"])}")
-
-        elif input1 == '3':#写入密码
-            while True:
-                data4 = requests.get(f'{url}/GetFile',timeout=3).json()
+        match input1.upper():
+            case "1":#读取密码
+                Get()
+            case "2":
+                data2 = requests.get(f'{url}/GetFile',timeout=3).json()
                 print(f"{BLUE}网站/应用：{RESET}")
-                for f in data4:
+                for f in data2:
                     num += 1
                     print(f"{RED}({num}) {RESET}{base64_to_chinese(f[:-5])}")
-                user_site = input("网站/应用(支持输入序号)(T/退出)：").strip()
-                user_site_bool = user_site.isdigit()
-                if len(user_site) == 0:
-                    print("请输入正确的网站/应用")
-                elif user_site_bool:
-                    user_site_nums = int(user_site)
-                    user_site = base64_to_chinese(data4[int(user_site_nums) - 1][:-5])
-                    break
-                elif user_site.upper() == "T":
-                    raise AbortProcessing
-                else:
-                    break
+                while True:
+                    try:
+                        input3 = input("请输入你想查询的网站/应用的序号(T/退出)：").strip()
+                        if input3 == "":
+                            print("请输入正确的序号")
+                        elif input3.upper() == "T":
+                            raise AbortProcessing
+                        else:
+                            data3 = requests.get(f'{url}/PartGet/{data2[int(input3)-1]}')
+                            break
+                    except IndexError:
+                        print("超出索引范围")
+                    except ValueError:
+                            print("请输入正确的序号")
+                        
+                print(data2[int(input3)-1])
+                for z in data3.json():
+                    print(f"用户名/账户：{base64_to_chinese(z["name"])}", end='  ')
+                    print(f"密码：{base64_to_chinese(z["pwds"])}", end='  ')
+                    print(f"备注：{base64_to_chinese(z["note"])}")
 
-            while True:
-               user_name = input("用户名/账户(T/退出)：").strip()
-               if user_name == "":
-                   print("请输入正确的用户名/账户")
-               elif user_name.upper() == "T":
-                   raise AbortProcessing
-               else:
-                   break
-            while True:
-                user_password = input("密码(T/退出)：").strip()
-                if user_password == "":
-                    print("请输入正确的密码")
-                elif user_password.upper() == "T":
-                    raise AbortProcessing
-                else:
-                    break
-            user_note = input("备注：")
-            if user_note.strip() == '':
-                user_note = "无"
-            dict1["name"] = chinese_to_base64(user_name)
-            dict1["pwds"] = chinese_to_base64(user_password)
-            dict1["note"] = chinese_to_base64(user_note)
-            site.append(chinese_to_base64(user_site))
-            site.append(dict1)
-            try:
-                requests.post(f"{url}/post", json=site)
-            except requests.exceptions.ConnectionError:
-                print("远程主机强迫关闭了本次连接")
+            case "3":#写入密码
+                while True:
+                    try:
+                        data4 = requests.get(f'{url}/GetFile',timeout=3).json()
+                        print(f"{BLUE}网站/应用：{RESET}")
+                        for f in data4:
+                            num += 1
+                            print(f"{RED}({num}) {RESET}{base64_to_chinese(f[:-5])}")
+                        user_site = input("网站/应用(支持输入序号)(T/退出)：").strip()
+                        user_site_bool = user_site.isdigit()
+                        if len(user_site) == 0:
+                            print("请输入正确的网站/应用")
+                        elif user_site_bool:
+                            user_site_nums = int(user_site)
+                            user_site = base64_to_chinese(data4[int(user_site_nums) - 1][:-5])
+                            print("asd")
+                        elif user_site.upper() == "T":
+                            raise AbortProcessing
+                    except IndexError:
+                        print("不支持纯数字名称")
+                    else:
+                        break
+                while True:
+                   user_name = input("用户名/账户(T/退出)：").strip()
+                   if user_name == "":
+                       print("请输入正确的用户名/账户")
+                   elif user_name.upper() == "T":
+                       raise AbortProcessing
+                   else:
+                       break
+                while True:
+                    user_password = input("密码(T/退出)：").strip()
+                    if user_password == "":
+                        print("请输入正确的密码")
+                    elif user_password.upper() == "T":
+                        raise AbortProcessing
+                    else:
+                        break
+                user_note = input("备注：")
+                if user_note.strip() == '':
+                    user_note = "无"
+                dict1["name"] = chinese_to_base64(user_name)
+                dict1["pwds"] = chinese_to_base64(user_password)
+                dict1["note"] = chinese_to_base64(user_note)
+                site.append(chinese_to_base64(user_site))
+                site.append(dict1)
+                try:
+                    requests.post(f"{url}/post", json=site)
+                except requests.exceptions.ConnectionError:
+                    print("远程主机强迫关闭了本次连接")
 
-        elif input1 == '4':#修改密码
-            web = Get(color=True)
-            ac = {}
-            get_modify = GetModify_indices("修改",web)
-            web_num = get_modify[0]
-            num = get_modify[1]
+            case '4':#修改密码
+                web = Get(color=True)
+                ac = {}
+                get_modify = GetModify_indices("修改",web)
+                web_num = get_modify[0]
+                num = get_modify[1]
 
-            ac["file"] = f"{web[1][int(web_num) - 1]}"
-            ac["nums"] = f"{int(num) - 1}"
-            name = chinese_to_base64(input("用户名/账户(不修改则直接回车(Enter))：").strip())
-            password = chinese_to_base64(input("密码(不修改则直接回车(Enter))：").strip())
-            note = chinese_to_base64(input("备注(不修改则直接回车(Enter))：").strip())
-            ac.update({"name": name, "pwds": password, "note": note})
-            a = requests.patch(f"{url}/patch", json=ac)
+                ac["file"] = f"{web[1][int(web_num) - 1]}"
+                ac["nums"] = f"{int(num) - 1}"
+                name = chinese_to_base64(input("用户名/账户(不修改则直接回车(Enter))：").strip())
+                password = chinese_to_base64(input("密码(不修改则直接回车(Enter))：").strip())
+                note = chinese_to_base64(input("备注(不修改则直接回车(Enter))：").strip())
+                ac.update({"name": name, "pwds": password, "note": note})
+                a = requests.patch(f"{url}/patch", json=ac)
 
-        elif input1 == '5':
-            acs = {}
-            web = Get(color=True)
-            get_modify = GetModify_indices("删除",web)
-            web_num = get_modify[0]
-            num = get_modify[1]
-            file_num = web[1][int(web_num)-1]
-            acs.update({"file":file_num,"pwd_num":int(num)-1})
-            input2 = input("请确认(y/n): ")
-            if input2=="y":
-                requests.delete(f"{url}/del", json=acs)
-            elif input2=="n":
-                print("已成功删除")
+            case '5':
+                acs = {}
+                web = Get(color=True)
+                get_modify = GetModify_indices("删除",web)
+                web_num = get_modify[0]
+                num = get_modify[1]
+                file_num = web[1][int(web_num)-1]
+                acs.update({"file":file_num,"pwd_num":int(num)-1})
+                input2 = input("请确认(y/n): ")
+                if input2=="y":
+                    requests.delete(f"{url}/del", json=acs)
+                elif input2=="n":
+                    print("已成功删除")
+            
+            case "T":
+                print("已退出")
+                exit()
 
-        else:
-            print("请输入正确的指令")
+            case _:
+                print("请输入正确的指令")
     except requests.exceptions.ConnectionError:
         print("连接失败")
 
     except AbortProcessing:
         print("已退出")
+    
