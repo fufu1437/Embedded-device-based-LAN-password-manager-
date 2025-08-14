@@ -179,10 +179,14 @@ while True:
           f"(5)删除密码{RESET}")
     try:
         input1 = input("请输入你要执行的操作的序号(T/退出程序)：").strip()
+        if input1.upper()=="T":
+                print("已退出")
+                exit()
         requests.get(f"{url}/test", timeout=3)
         match input1.upper():
             case "1":#读取密码
                 Get()
+
             case "2":
                 data2 = requests.get(f'{url}/GetFile',timeout=3).json()
                 print(f"{BLUE}网站/应用：{RESET}")
@@ -289,10 +293,6 @@ while True:
                     requests.delete(f"{url}/del", json=acs)
                 elif input2=="n":
                     print("已成功删除")
-            
-            case "T":
-                print("已退出")
-                exit()
 
             case _:
                 print("请输入正确的指令")
