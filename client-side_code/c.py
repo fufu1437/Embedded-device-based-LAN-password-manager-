@@ -20,7 +20,7 @@ try:
     os.stat(r"data\config.json")
 except FileNotFoundError:
     with open(r"data\config.json","w")as f:
-        json.dump({"_comment": "请在url字段填入esp32的ip地址，port字段填入端口(Enter the IP address of ESP32 in the URL field and the port in the port field)",
+        json.dump({
                    "ip":"192.168.1024.0",
                    "port":"80"},f,indent=4,ensure_ascii=False)
 
