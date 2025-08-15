@@ -13,29 +13,28 @@ b = 34
 
 
 
-try:
-    os.path.exists('data')
-except TypeError:
+if not os.path.exists('data'):
     os.mkdir("data")
+
 try:
-    os.stat("./data/config.json")
-except (NameError,FileNotFoundError):
-    with open("./data/config.json","w")as f:
+    os.stat(r"data\config.json")
+except FileNotFoundError:
+    with open(r"data\config.json","w")as f:
         json.dump({"_comment": "请在url字段填入esp32的ip地址，port字段填入端口(Enter the IP address of ESP32 in the URL field and the port in the port field)",
                    "ip":"192.168.1024.0",
                    "port":"80"},f,indent=4,ensure_ascii=False)
 
-with open("./data/config.json", "r") as f:
+with open(r"data\config.json", "r") as f:
     data = json.load(f)
 if data["ip"] == "192.168.1024.0":
-    with open("./data/config.json","r")as f:
+    with open(r"data\config.json","r")as f:
         a = json.load(f)
     urlInput = input("请输入设备的ip地址：")
     print("后续可在data目录的config.json文件中修改")
     portInput = input("请输入设备的端口(默认80)：")
     if portInput == "":
         portInput = "80"
-    with open("./data/config.json", "w") as f:
+    with open(r"data\config.json", "w") as f:
         json.dump({"ip":urlInput,"port":portInput},f,indent=4)
 else:
     url = f"http://{data["ip"]}:{int(data["port"])}"
