@@ -1,17 +1,46 @@
 import base64
 import requests
 import json
-# import socket
 import ctypes
+import os
+
+
 
 # 定义RGB值
 r = 30
 g = 31
 b = 34
-# MicroPython设备的IP地址和端口
-device_ip = "192.168.1.46"  # 替换为你的设备IP
-port = 80  # 替换为HTTP服务器端口
-url = f"http://{device_ip}:{port}"
+
+
+
+try:
+    os.path.exists('data')
+except TypeError:
+    os.mkdir("data")
+try:
+    os.stat("./data/config.json")
+except (NameError,FileNotFoundError):
+    with open("./data/config.json","w")as f:
+        json.dump({"_comment": "请在url字段填入esp32的ip地址，port字段填入端口(Enter the IP address of ESP32 in the URL field and the port in the port field)",
+                   "ip":"192.168.1024.0",
+                   "port":"80"},f,indent=4,ensure_ascii=False)
+
+with open("./data/config.json", "r") as f:
+    data = json.load(f)
+if data["ip"] == "192.168.1024.0":
+    with open("./data/config.json","r")as f:
+        a = json.load(f)
+    urlInput = input("请输入设备的ip地址：")
+    print("后续可在data目录的config.json文件中修改")
+    portInput = input("请输入设备的端口(默认80)：")
+    if portInput == "":
+        portInput = "80"
+    with open("./data/config.json", "w") as f:
+        json.dump({"ip":urlInput,"port":portInput},f,indent=4)
+else:
+    url = f"http://{data["ip"]}:{int(data["port"])}"
+
+
 
 RED = "\033[31m"
 GREEN = "\033[32m"
@@ -20,17 +49,6 @@ RESET = "\033[0m"
 LightGrayFg = "\033[38;2;188;190;196m"
 DimmedRed = "\033[38;2;230;0;0m"
 AquaFg = "\033[38;2;125;182;191m"
-
-# def check_port(ip, port=80, timeout=1):
-#     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#     s.settimeout(timeout)
-#     try:
-#         s.connect((ip, port))
-#         return True  # 端口开放表示设备可达
-#     except OSError:
-#         return False  # 连接失败
-#     finally:
-#         s.close()
 
 # 设置整个终端背景色 (仅限Windows)
 def set_terminal_bg_color(r, g, b):
@@ -209,8 +227,8 @@ while True:
                         print("超出索引范围")
                     except ValueError:
                             print("请输入正确的序号")
-                        
-                print(data2[int(input3)-1])
+
+                print(base64_to_chinese(data2[int(input3) - 1][:-5]))
                 for z in data3.json():
                     print(f"用户名/账户：{base64_to_chinese(z["name"])}", end='  ')
                     print(f"密码：{base64_to_chinese(z["pwds"])}", end='  ')
@@ -302,4 +320,3 @@ while True:
 
     except AbortProcessing:
         print("已退出")
-    
