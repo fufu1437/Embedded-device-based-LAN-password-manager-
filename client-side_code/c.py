@@ -179,13 +179,13 @@ if data["ip"] == "192.168.1024.0":
     while True:
         urlInput = input("请输入设备的ip地址：").strip()
         if urlInput == "":
-            print("请输入正确的ip地址")
+            print(f"{RED}请输入正确的ip地址{RESET}")
         else:
             if bool(re.fullmatch(r'^[\d.]+$', urlInput)):
                 print("后续可在data目录的config.json文件中修改")
                 break
             else:
-                print("请输入正确的ip地址")
+                print(f"{RED}请输入正确的ip地址{RESET}")
 
     portInput = input("请输入设备的端口(默认80)：")
     if portInput == "":
