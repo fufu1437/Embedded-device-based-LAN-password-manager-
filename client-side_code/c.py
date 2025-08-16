@@ -1,4 +1,5 @@
 import base64
+import re
 import requests
 import json
 import ctypes
@@ -29,15 +30,28 @@ with open(r"data\config.json", "r") as f:
 if data["ip"] == "192.168.1024.0":
     with open(r"data\config.json","r")as f:
         a = json.load(f)
-    urlInput = input("请输入设备的ip地址：")
-    print("后续可在data目录的config.json文件中修改")
+    while True:
+        urlInput = input("请输入设备的ip地址：").strip()
+        if urlInput == "":
+            print("请输入正确的ip地址")
+        else:
+            if bool(re.fullmatch(r'^[\d.]+$', urlInput)):
+                print("后续可在data目录的config.json文件中修改")
+                break
+            else:
+                print("请输入正确的ip地址")
+
     portInput = input("请输入设备的端口(默认80)：")
     if portInput == "":
-        portInput = "80"
+        portInput = 80
+    else:
+        portInput = int(portInput)
     with open(r"data\config.json", "w") as f:
         json.dump({"ip":urlInput,"port":portInput},f,indent=4)
-else:
-    url = f"http://{data["ip"]}:{int(data["port"])}"
+
+with open(r"data\config.json", "r") as f:
+    data = json.load(f)
+url = f"http://{data["ip"]}:{data["port"]}"
 
 
 
