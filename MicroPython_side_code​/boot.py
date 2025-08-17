@@ -1,10 +1,11 @@
-import sys
-sys.path.append("/py")#防止无法获取到依赖，请根据你的实际情况来判断
 import network
 import time
 from machine import Pin
-#项目发布在：https://github.com/fufu1437/Embedded-device-based-LAN-password-manager-
-def wifi(name="your wifi name", password="your wifi password", timeout=10):
+
+
+
+
+def wifi(name="CMCC-sia7", password="Lb9E5PFC", timeout=10):
     """
     连接Wi-Fi网络1
     参数:
@@ -36,4 +37,3 @@ def wifi(name="your wifi name", password="your wifi password", timeout=10):
         return False
 
 wifi()
-

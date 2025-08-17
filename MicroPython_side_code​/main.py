@@ -3,14 +3,21 @@ from machine import Pin,SPI
 import ujson as json
 import os
 import sdcard
-#项目发布在：https://github.com/fufu1437/Embedded-device-based-LAN-password-manager-
-def sd():#连接sd卡来的
-    spi = SPI(1, sck=Pin(18), mosi=Pin(23), miso=Pin(19))
-    cs = Pin(5, Pin.OUT)
-    sd1 = sdcard.SDCard(spi, cs)
-    os.mount(sd1, '/sd')
 
-sd()
+spi = SPI(1, sck=Pin(18), mosi=Pin(21), miso=Pin(19))
+cs = Pin(5, Pin.OUT)
+sd1 = sdcard.SDCard(spi, cs)
+os.mount(sd1, '/sd')
+led = Pin(2,Pin.OUT)
+
+file_names = os.listdir("/sd/data")
+for i in file_names:
+    with open(f"/sd/data/{i}", 'rb') as f:
+        f.seek(0, 2)
+        size = f.tell()
+    if size<10:
+        os.remove(f"/sd/data/{i}")
+
 app = Microdot()
 list1=[]
 path = "/sd/data"
@@ -30,7 +37,6 @@ def get(request):#读密码来的
                 with open(f"{path}/{i}", "r") as f:
                     file_out = json.load(f)
                 try:
-                    file_out[0]
                     file_out.append(return_str)
                     yield json.dumps(file_out) + "\n"
                 except IndexError:
@@ -103,7 +109,13 @@ def delete(request):
     del json_data[int(pwd_num)]
     with open(f"{path}/{file}.json","w") as f:
         json.dump(json_data,f)
-
+    try:
+        with open(f"{path}/{file}.json", "r") as f:
+            json.load(f)[0]
+    except IndexError:
+        os.remove(f"{path}/{file}.json")
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
+
+
 

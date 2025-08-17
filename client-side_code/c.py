@@ -266,7 +266,6 @@ while True:
                         elif user_site_bool:
                             user_site_nums = int(user_site)
                             user_site = base64_to_chinese(data4[int(user_site_nums) - 1][:-5])
-                            print("asd")
                         elif user_site.upper() == "T":
                             raise AbortProcessing
                     except IndexError:
